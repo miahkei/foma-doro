@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f4f6ee">
+  <title>Foma-doro! | Study planner</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+  <script src="supabase-config.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Main navigation">
+      <a class="brand" href="#home" data-page-link="home" aria-label="Foma-doro home">
+        <span class="brand-mark" aria-hidden="true">F</span>
+        <span>foma-doro<span class="brand-dot">!</span></span>
+      </a>
+
+      <nav class="home-nav" aria-label="Home">
+        <button class="nav-link is-active" type="button" data-page="home" aria-current="page">
+          <span class="nav-icon" aria-hidden="true">01</span> Home
+        </button>
+      </nav>
+      <p class="nav-label">YOUR SPACE</p>
+      <nav class="main-nav" aria-label="Your space">
+        <button class="nav-link" type="button" data-page="daily-goal">
+          <span class="nav-icon" aria-hidden="true">01</span> Sessions
+        </button>
+        <button class="nav-link" type="button" data-page="study">
+          <span class="nav-icon" aria-hidden="true">02</span> Timer
+        </button>
+        <button class="nav-link" type="button" data-page="goals">
+          <span class="nav-icon" aria-hidden="true">03</span> Tasks
+        </button>
+        <button class="nav-link" type="button" data-page="calendar">
+          <span class="nav-icon" aria-hidden="true">04</span> Calendar
+        </button>
+      </nav>
+      <div class="session-counter" aria-live="polite" aria-label="Completed Pomodoro sessions">
+        <span class="session-counter-label">SESSIONS</span>
+        <strong><span id="sessionCount">0</span><span class="session-divider">/</span><span id="sessionTargetDisplay">--</span></strong>
+        <span class="session-progress-track" aria-hidden="true"><span id="sessionProgressBar"></span></span>
+      </div>
+
+      <div class="sidebar-note">
+        <span class="note-spark" aria-hidden="true">+</span>
+        <p>A little focus goes a long way.</p>
+        <span class="note-caption">ONE SESSION AT A TIME</span>
+      </div>
+      <p class="sidebar-footer">MADE FOR YOUR NEXT BIG THING</p>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <p class="today-label" id="todayLabel"></p>
+        <div class="topbar-actions">
+          <a class="topbar-link" href="#goals" data-page-link="goals">Your goals <span aria-hidden="true">&rarr;</span></a>
+          <span class="account-status" id="accountStatus" role="status">Guest mode</span>
+          <button class="account-button" id="accountButton" type="button">Sign in</button>
+        </div>
+      </header>
+
+      <section class="page-view home-view is-visible" id="page-home" aria-labelledby="homeTitle">
+        <div class="page-heading">
+          <div>
+            <p class="eyebrow">ABOUT FOMA-DORO</p>
+            <h1 id="homeTitle">Welcome to Foma-doro<span class="heading-period">!</span></h1>
+            <p class="page-subtitle">A little space where students who have 'Fear Of Missing Activities' plan your school days, focus on what matters, and keep your goals in sight.</p>
+          </div>
+          <div class="date-stamp" aria-hidden="true"><span>YOUR</span><strong>DAY</strong></div>
+        </div>
+
+        <a class="home-plan-button activity-tab activity-tab-focus" href="#daily-goal" data-page-link="daily-goal">
+          <span class="activity-number">PLAN YOUR DAY</span>
+          <strong>Plan out your study session for today</strong>
+          <span class="activity-description">Choose how many focus sessions feel right.</span>
+          <span class="activity-arrow" aria-hidden="true">&rarr;</span>
+        </a>
+
+        <section class="activities-section" aria-labelledby="activitiesTitle">
+          <div class="activities-heading">
+            <div><p class="eyebrow">PICK YOUR NEXT STEP</p><h2 id="activitiesTitle">Explore activities</h2></div>
+            <span class="activities-caption">THREE WAYS TO GET GOING</span>
+          </div>
+          <div class="activity-tabs" role="group" aria-label="Foma-doro activities">
+            <button class="activity-tab activity-tab-focus" type="button" data-page-link="study">
+              <span class="activity-number">01 / FOCUS</span><strong>Pomodoro timer</strong><span class="activity-description">Settle into a focused session.</span><span class="activity-arrow" aria-hidden="true">&rarr;</span>
+            </button>
+            <button class="activity-tab activity-tab-tasks" type="button" data-page-link="goals">
+              <span class="activity-number">02 / DO</span><strong>Tasks &amp; goals</strong><span class="activity-description">Keep your next steps together.</span><span class="activity-arrow" aria-hidden="true">&rarr;</span>
+            </button>
+            <button class="activity-tab activity-tab-calendar" type="button" data-page-link="calendar">
+              <span class="activity-number">03 / PLAN</span><strong>School calendar</strong><span class="activity-description">See the month and save events.</span><span class="activity-arrow" aria-hidden="true">&rarr;</span>
+            </button>
+          </div>
+        </section>
+
+        <section class="about-us-section" aria-labelledby="aboutUsTitle">
+          <div class="about-us-heading">
+            <p class="eyebrow">WHY FOMA-DORO</p>
+            <h2 id="aboutUsTitle">About us<span class="heading-period">.</span></h2>
+          </div>
+          <div class="about-us-content">
+            <div class="about-us-copy">
+              <p><strong>Some students struggle with time management, and some experience short attention spans. Long study sessions can lead to burnout and feel so overwhelming that tasks go unfinished and procrastination sets in.</strong></p>
+              <p><strong>Our main purpose is to help students improve time management by helping them plan when to start and stop activities. Scheduled study sessions and breaks can also support students with short attention spans.</strong></p>
+            </div>
+            <div class="about-us-features">
+              <h3>What you can do here</h3>
+              <ul>
+                <li>Plan out daily study sessions</li>
+                <li>Use the Pomodoro timer for focus and enhanced time management</li>
+                <li>Keep track of tasks so none are left behind</li>
+                <li>Stay on track with school events using the calendar</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <section class="page-view daily-goal-view" id="page-daily-goal" aria-labelledby="dailyGoalTitle" hidden>
+        <div class="page-heading">
+          <div>
+            <p class="eyebrow">AIM FOR TODAY</p>
+            <h1 id="dailyGoalTitle">Plan out study session<span class="heading-period">.</span></h1>
+            <p class="page-subtitle">Pick a pace that feels right. Your session count starts after you set it.</p>
+          </div>
+          <div class="task-count goal-count" aria-live="polite"><strong id="goalPreviewCount">--</strong><span>SESSIONS</span></div>
+        </div>
+
+        <form class="goal-plan-panel" id="sessionGoalForm">
+          <div class="goal-plan-heading">
+            <div><p class="eyebrow">CHOOSE YOUR PACE</p><h2>How much feels doable?</h2></div>
+            <span class="list-decoration" aria-hidden="true">+</span>
+          </div>
+          <div class="goal-choice-grid" role="radiogroup" aria-label="Choose a study goal preset">
+            <label class="goal-choice" for="goalEasy">
+              <input id="goalEasy" type="radio" name="goalPreset" value="2">
+              <span class="goal-choice-content"><span class="goal-choice-label">GO EASY</span><strong>2 sessions</strong><span class="goal-choice-note">A gentle start</span></span>
+              <span class="goal-choice-check" aria-hidden="true">+</span>
+            </label>
+            <label class="goal-choice" for="goalSteady">
+              <input id="goalSteady" type="radio" name="goalPreset" value="4">
+              <span class="goal-choice-content"><span class="goal-choice-label">FIND YOUR FLOW</span><strong>4 sessions</strong><span class="goal-choice-note">A steady pace</span></span>
+              <span class="goal-choice-check" aria-hidden="true">+</span>
+            </label>
+            <label class="goal-choice" for="goalBig">
+              <input id="goalBig" type="radio" name="goalPreset" value="6">
+              <span class="goal-choice-content"><span class="goal-choice-label">GO BIG</span><strong>6 sessions</strong><span class="goal-choice-note">A focused stretch</span></span>
+              <span class="goal-choice-check" aria-hidden="true">+</span>
+            </label>
+          </div>
+          <div class="custom-goal-row">
+            <label for="customSessionGoal">Choose a custom goal</label>
+            <select id="customSessionGoal" aria-label="Custom number of study sessions">
+              <option value="" selected>Choose sessions</option>
+              <option value="1">1 session</option>
+              <option value="2">2 sessions</option>
+              <option value="3">3 sessions</option>
+              <option value="4">4 sessions</option>
+              <option value="5">5 sessions</option>
+              <option value="6">6 sessions</option>
+              <option value="7">7 sessions</option>
+              <option value="8">8 sessions</option>
+            </select>
+          </div>
+          <div class="goal-plan-actions">
+            <p id="goalStatus" aria-live="polite">Choose a pace to set today's goal.</p>
+            <button class="button button-primary" id="setGoalButton" type="submit" disabled>Set Now!</button>
+          </div>
+        </form>
+
+        <section class="streak-panel" aria-labelledby="weeklyStreakTitle">
+          <div class="streak-heading">
+            <div><p class="eyebrow">YOUR WEEK</p><h2 id="weeklyStreakTitle">Weekly study streak</h2></div>
+            <div class="streak-total"><strong id="currentStreak">0</strong><span>DAY STREAK</span></div>
+          </div>
+          <ol class="streak-days" id="streakDays" aria-label="Study activity this week"></ol>
+          <p class="streak-summary" id="streakSummary" aria-live="polite">Complete a focus session to start your streak.</p>
+        </section>
+      </section>
+
+      <section class="page-view study-view" id="page-study" aria-labelledby="studyTitle" hidden>
+        <div class="page-heading">
+          <div>
+            <p class="eyebrow">STUDY SESSION</p>
+            <h1 id="studyTitle">Make time to focus<span class="heading-period">.</span></h1>
+            <p class="page-subtitle">Work toward the session goal you set for today.</p>
+          </div>
+        </div>
+        <div class="study-grid">
+          <section class="timer-panel" id="timerPanel" aria-labelledby="timerTitle">
+            <div class="panel-topline">
+              <div>
+                <p class="eyebrow">FOCUS TIMER</p>
+                <h2 id="timerTitle">Find your rhythm</h2>
+              </div>
+              <span class="status-pill" id="timerStatus">READY</span>
+            </div>
+
+            <div class="timer-face" id="timerFace" style="--progress: 0deg">
+              <div class="timer-inner">
+                <span class="timer-mode" id="timerMode">FOCUS SESSION</span>
+                <p class="timer-display" id="timerDisplay" role="timer" aria-live="off">25:00</p>
+                <span class="timer-hint" id="timerHint">Time to get started</span>
+              </div>
+            </div>
+
+            <div class="preset-control" role="group" aria-label="Timer length">
+              <button class="preset-button is-selected" type="button" data-work="25" data-rest="5" aria-pressed="true">25 <span>FOCUS</span> / 5 <span>BREAK</span></button>
+              <button class="preset-button" type="button" data-work="50" data-rest="10" aria-pressed="false">50 <span>FOCUS</span> / 10 <span>BREAK</span></button>
+            </div>
+
+            <div class="timer-actions">
+              <button class="button button-primary" id="toggleTimer" type="button" disabled>Set a daily goal first</button>
+              <button class="button button-secondary" id="resetTimer" type="button">Reset plan</button>
+            </div>
+            <p class="timer-footnote">Your break starts automatically when focus time is up.</p>
+          </section>
+
+          <aside class="side-stack">
+            <section class="next-up-panel" aria-labelledby="nextUpTitle">
+              <div class="next-up-heading">
+                <div>
+                  <p class="eyebrow">YOUR GOALS</p>
+                  <h2 id="nextUpTitle">Your task list</h2>
+                </div>
+                <button class="text-button" type="button" data-page="goals">Edit <span aria-hidden="true">&rarr;</span></button>
+              </div>
+              <ul class="preview-list" id="taskPreview" aria-label="Your saved goals">
+                <li class="empty-preview">Your task list is empty.</li>
+              </ul>
+            </section>
+
+            <section class="quote-panel quote-panel-compact" aria-labelledby="smallStepsTitle">
+              <div class="quote-mark" aria-hidden="true">/</div>
+              <p class="eyebrow">A NOTE TO SELF</p>
+              <h2 id="smallStepsTitle">Small steps still move you forward.</h2>
+              <span class="quote-rule"></span>
+              <p class="quote-caption">SHOW UP. DO A LITTLE. REPEAT.</p>
+            </section>
+          </aside>
+        </div>
+      </section>
+
+      <section class="page-view calendar-view" id="page-calendar" aria-labelledby="calendarTitle" hidden>
+        <div class="page-heading">
+          <div>
+            <p class="eyebrow">PLAN AHEAD</p>
+            <h1 id="calendarTitle">School calendar<span class="heading-period">.</span></h1>
+            <p class="page-subtitle">DepEd school year 2026-2027</p>
+          </div>
+          <span class="year-marker">SY <strong>2026 / 27</strong></span>
+        </div>
+        <div class="calendar-layout">
+          <section class="calendar-panel" aria-label="Monthly calendar">
+            <div class="month-toolbar">
+              <div>
+                <p class="eyebrow">MONTH VIEW</p>
+                <h2 id="calendarMonth" aria-live="polite"></h2>
+              </div>
+              <div class="month-controls" aria-label="Change month">
+                <button class="month-button" type="button" data-calendar-shift="-1" aria-label="Previous month">&larr;</button>
+                <button class="month-today" type="button" id="calendarToday">Today</button>
+                <button class="month-button" type="button" data-calendar-shift="1" aria-label="Next month">&rarr;</button>
+              </div>
+            </div>
+            <div class="calendar-grid" role="grid" aria-label="Monthly dates">
+              <div class="week-headings" role="row">
+                <span role="columnheader">Sun</span><span role="columnheader">Mon</span><span role="columnheader">Tue</span><span role="columnheader">Wed</span><span role="columnheader">Thu</span><span role="columnheader">Fri</span><span role="columnheader">Sat</span>
+              </div>
+              <div class="calendar-days" id="calendarDays"></div>
+            </div>
+            <div class="calendar-legend"><span><i class="legend-school"></i> School date</span><span><i class="legend-personal"></i> Your event</span></div>
+          </section>
+
+          <aside class="calendar-sidebar">
+            <section class="selected-day-panel" aria-labelledby="selectedDateTitle">
+              <p class="eyebrow">DAY PLAN</p>
+              <h2 id="selectedDateTitle">Selected date</h2>
+              <ul class="day-events" id="dayEvents" aria-live="polite"></ul>
+              <p class="day-empty" id="dayEmpty">Nothing planned for this date yet.</p>
+            </section>
+
+            <section class="add-event-panel" aria-labelledby="addEventTitle">
+              <p class="eyebrow">MAKE A NOTE</p>
+              <h2 id="addEventTitle">Add important event</h2>
+              <form id="calendarEventForm" class="event-form">
+                <label for="eventTitle">Event name</label>
+                <input id="eventTitle" name="title" type="text" maxlength="80" placeholder="Exam, project, reminder..." required>
+                <label for="eventDate">Date</label>
+                <input id="eventDate" name="date" type="date" required>
+                <button class="button button-primary" type="submit">Save event <span aria-hidden="true">+</span></button>
+              </form>
+            </section>
+          </aside>
+        </div>
+        <p class="calendar-footnote">School-year dates shown as provided. Check with your school for local updates.</p>
+      </section>
+
+      <section class="page-view tasks-view" id="page-goals" aria-labelledby="tasksTitle" hidden>
+        <div class="page-heading">
+          <div>
+            <p class="eyebrow">MAKE IT MANAGEABLE</p>
+            <h1>Tasks &amp; goals<span class="heading-period">.</span></h1>
+            <p class="page-subtitle">Get it out of your head and onto your list.</p>
+          </div>
+          <div class="task-count" aria-live="polite"><strong id="remainingCount">0</strong><span>TO DO</span></div>
+        </div>
+        <section class="tasks-panel" aria-labelledby="listTitle">
+          <div class="tasks-panel-heading">
+            <div><p class="eyebrow">YOUR CHECKLIST</p><h2 id="listTitle">One thing at a time</h2></div>
+            <span class="list-decoration" aria-hidden="true">+</span>
+          </div>
+          <form class="task-form" id="taskForm">
+            <label class="visually-hidden" for="newTask">Add a task or goal</label>
+            <input id="newTask" name="task" type="text" maxlength="120" placeholder="What would you like to get done?" autocomplete="off" required>
+            <button class="button button-primary" type="submit">Add task <span aria-hidden="true">+</span></button>
+          </form>
+          <ul class="task-list" id="tasksList" aria-live="polite"></ul>
+          <p class="tasks-empty" id="tasksEmpty">No tasks just yet. Add one small thing to begin.</p>
+          <p class="storage-note">Your list is saved on this device.</p>
+        </section>
+      </section>
+
+      <footer class="main-footer"><span>FOMA-DORO! STUDY PLANNER</span><span>TAKE YOUR TIME. YOU'RE GETTING THERE.</span></footer>
+    </main>
+  </div>
+
+  <dialog class="account-dialog" id="accountDialog" aria-labelledby="accountDialogTitle">
+    <div class="account-dialog-heading">
+      <div>
+        <p class="eyebrow">YOUR FOMA-DORO ACCOUNT</p>
+        <h2 id="accountDialogTitle">Sign in</h2>
+      </div>
+      <button class="account-close" id="accountClose" type="button" aria-label="Close sign-in dialog">x</button>
+    </div>
+    <p class="account-config-note" id="accountConfigNote" hidden>Cloud sync is not configured yet. Add your Supabase project URL and public anon key in <strong>supabase-config.js</strong>, then run the SQL setup described in the README.</p>
+    <form class="account-form" id="accountForm">
+      <label for="accountEmail">Email address</label>
+      <input id="accountEmail" name="email" type="email" autocomplete="email" required>
+      <label for="accountPassword">Password</label>
+      <input id="accountPassword" name="password" type="password" autocomplete="current-password" minlength="8" required>
+      <button class="button button-primary" id="accountSubmit" type="submit">Sign in</button>
+    </form>
+    <button class="account-mode-toggle" id="accountModeToggle" type="button">New here? Create an account</button>
+    <p class="account-message" id="accountMessage" role="status" aria-live="polite"></p>
+  </dialog>
+</body>
+</html>
