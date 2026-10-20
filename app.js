@@ -2,14 +2,81 @@ const pageButtons = document.querySelectorAll('.nav-link[data-page]');
 const pageLinks = document.querySelectorAll('[data-page-link]');
 const pageViews = document.querySelectorAll('.page-view');
 const todayLabel = document.getElementById('todayLabel');
+const sidebar = document.getElementById('sidebar');
+const sidebarToggle = document.getElementById('sidebarToggle');
+const dailyQuote = document.getElementById('dailyQuote');
+const mobileSidebarQuery = window.matchMedia('(max-width: 700px)');
+const appShell = document.querySelector('.app-shell');
 let supabaseClient = null;
 let currentUser = null;
+let lastScrollY = window.scrollY;
+let lastScrollDirection = 0;
+let scrollDirectionDistance = 0;
+
+const dailyQuotes = [
+  'A little focus goes a long way.',
+  'Small steps add up to meaningful progress.',
+  'You can begin again, one moment at a time.',
+  'Your effort today is something to be proud of.',
+  'Progress matters more than perfection.',
+  'Take a breath, then take the next step.',
+  'Every focused minute is a win.',
+  'Make room for breaks; they are part of the plan.',
+  'You are capable of more than you think.',
+  'Keep going at a pace that feels right for you.',
+];
+
+const quoteDate = new Date();
+const quoteDay = Date.UTC(quoteDate.getFullYear(), quoteDate.getMonth(), quoteDate.getDate()) / 86400000;
+dailyQuote.textContent = dailyQuotes[quoteDay % dailyQuotes.length];
 
 todayLabel.textContent = new Intl.DateTimeFormat('en', {
   weekday: 'long',
   month: 'long',
   day: 'numeric',
 }).format(new Date());
+
+function setSidebarOpen(isOpen) {
+  sidebar.hidden = !isOpen;
+  sidebar.classList.remove('is-scroll-hidden');
+  sidebarToggle.setAttribute('aria-expanded', String(isOpen));
+  sidebarToggle.setAttribute('aria-label', isOpen ? 'Hide sidebar' : 'Show sidebar');
+  sidebarToggle.title = isOpen ? 'Hide sidebar' : 'Show sidebar';
+  appShell.classList.toggle('sidebar-collapsed', !isOpen);
+}
+
+setSidebarOpen(!mobileSidebarQuery.matches);
+
+sidebarToggle.addEventListener('click', () => {
+  setSidebarOpen(sidebarToggle.getAttribute('aria-expanded') !== 'true');
+});
+
+mobileSidebarQuery.addEventListener('change', (event) => {
+  setSidebarOpen(!event.matches);
+});
+
+window.addEventListener('scroll', () => {
+  const currentScrollY = window.scrollY;
+  const scrollDelta = currentScrollY - lastScrollY;
+  const scrollDirection = Math.sign(scrollDelta);
+
+  if (scrollDirection === lastScrollDirection) {
+    scrollDirectionDistance += Math.abs(scrollDelta);
+  } else {
+    lastScrollDirection = scrollDirection;
+    scrollDirectionDistance = Math.abs(scrollDelta);
+  }
+
+  if (window.matchMedia('(max-width: 700px)').matches && !sidebar.hidden) {
+    if (currentScrollY <= 0 || (scrollDirection < 0 && scrollDirectionDistance > 8)) {
+      sidebar.classList.remove('is-scroll-hidden');
+    } else if (scrollDirection > 0 && scrollDirectionDistance > 8 && !sidebar.contains(document.activeElement)) {
+      sidebar.classList.add('is-scroll-hidden');
+    }
+  }
+
+  lastScrollY = currentScrollY;
+}, { passive: true });
 
 function showPage(pageName) {
   pageViews.forEach((view) => {
@@ -53,6 +120,45 @@ const schoolEvents = [
   { title: 'Term 3 instruction', start: '2027-01-04', end: '2027-03-23' },
   { title: 'Term 3 end block', start: '2027-03-24', end: '2027-04-08' },
   { title: 'End of school year', start: '2027-04-08', end: '2027-04-08' },
+];
+
+const publicHolidays = [
+  { title: "New Year's Day", date: '2026-01-01' },
+  { title: 'Chinese New Year', date: '2026-02-17' },
+  { title: 'Maundy Thursday', date: '2026-04-02' },
+  { title: 'Good Friday', date: '2026-04-03' },
+  { title: 'Holy Saturday', date: '2026-04-04' },
+  { title: 'Day of Valor', date: '2026-04-09' },
+  { title: 'Labor Day', date: '2026-05-01' },
+  { title: 'Independence Day', date: '2026-06-12' },
+  { title: 'Ninoy Aquino Day', date: '2026-08-21' },
+  { title: 'National Heroes Day', date: '2026-08-31' },
+  { title: "All Saints' Day Eve", date: '2026-10-31' },
+  { title: "All Saints' Day", date: '2026-11-01' },
+  { title: 'Bonifacio Day', date: '2026-11-30' },
+  { title: 'Feast of the Immaculate Conception', date: '2026-12-08' },
+  { title: 'Christmas Eve', date: '2026-12-24' },
+  { title: 'Christmas Day', date: '2026-12-25' },
+  { title: 'Rizal Day', date: '2026-12-30' },
+  { title: "New Year's Eve", date: '2026-12-31' },
+  { title: "New Year's Day", date: '2027-01-01', estimated: true },
+  { title: 'Chinese New Year', date: '2027-02-06', estimated: true },
+  { title: 'Maundy Thursday', date: '2027-03-25', estimated: true },
+  { title: 'Good Friday', date: '2027-03-26', estimated: true },
+  { title: 'Holy Saturday', date: '2027-03-27', estimated: true },
+  { title: 'Day of Valor', date: '2027-04-09', estimated: true },
+  { title: 'Labor Day', date: '2027-05-01', estimated: true },
+  { title: 'Independence Day', date: '2027-06-12', estimated: true },
+  { title: 'Ninoy Aquino Day', date: '2027-08-21', estimated: true },
+  { title: 'National Heroes Day', date: '2027-08-30', estimated: true },
+  { title: "All Saints' Day Eve", date: '2027-10-31', estimated: true },
+  { title: "All Saints' Day", date: '2027-11-01', estimated: true },
+  { title: 'Bonifacio Day', date: '2027-11-30', estimated: true },
+  { title: 'Feast of the Immaculate Conception', date: '2027-12-08', estimated: true },
+  { title: 'Christmas Eve', date: '2027-12-24', estimated: true },
+  { title: 'Christmas Day', date: '2027-12-25', estimated: true },
+  { title: 'Rizal Day', date: '2027-12-30', estimated: true },
+  { title: "New Year's Eve", date: '2027-12-31', estimated: true },
 ];
 
 const calendarMonth = document.getElementById('calendarMonth');
@@ -99,10 +205,13 @@ function eventsForDate(key) {
   const fromSchool = schoolEvents
     .filter((event) => event.start <= key && event.end >= key)
     .map((event) => ({ ...event, personal: false }));
+  const holidays = publicHolidays
+    .filter((event) => event.date === key)
+    .map((event) => ({ ...event, start: event.date, end: event.date, holiday: true, personal: false }));
   const personal = personalEvents
     .filter((event) => event.date === key)
     .map((event) => ({ ...event, start: event.date, end: event.date, personal: true }));
-  return [...fromSchool, ...personal];
+  return [...fromSchool, ...holidays, ...personal];
 }
 
 function renderSelectedDay() {
@@ -115,14 +224,14 @@ function renderSelectedDay() {
 
   events.forEach((event) => {
     const item = document.createElement('li');
-    item.className = `day-event${event.personal ? ' is-personal' : ''}`;
+    item.className = `day-event${event.personal ? ' is-personal' : ''}${event.holiday ? ' is-holiday' : ''}`;
     const marker = document.createElement('span');
     marker.className = 'day-event-marker';
     marker.setAttribute('aria-hidden', 'true');
     const details = document.createElement('span');
     details.className = 'day-event-details';
     const title = document.createElement('strong');
-    title.textContent = event.title;
+    title.textContent = `${event.title}${event.estimated ? ' (estimated)' : ''}`;
     details.append(title);
     if (!event.personal && event.start !== event.end) {
       const range = document.createElement('small');
@@ -170,6 +279,7 @@ function renderCalendar() {
     const allEvents = eventsForDate(key);
     const inCurrentMonth = date.getMonth() === month;
     const schoolStarts = schoolEvents.filter((event) => event.start === key);
+    const holidaysForDate = publicHolidays.filter((event) => event.date === key);
     const personalForDate = personalEvents.filter((event) => event.date === key);
     const cell = document.createElement('div');
     cell.className = 'calendar-cell';
@@ -191,11 +301,17 @@ function renderCalendar() {
 
     const markers = document.createElement('span');
     markers.className = 'day-markers';
-    if (allEvents.some((event) => !event.personal)) {
+    if (schoolEvents.some((event) => event.start <= key && event.end >= key)) {
       const schoolMarker = document.createElement('i');
       schoolMarker.className = 'calendar-marker-school';
       schoolMarker.setAttribute('aria-hidden', 'true');
       markers.append(schoolMarker);
+    }
+    if (holidaysForDate.length > 0) {
+      const holidayMarker = document.createElement('i');
+      holidayMarker.className = 'calendar-marker-holiday';
+      holidayMarker.setAttribute('aria-hidden', 'true');
+      markers.append(holidayMarker);
     }
     if (personalForDate.length > 0) {
       const personalMarker = document.createElement('i');
@@ -205,17 +321,18 @@ function renderCalendar() {
     }
     dayButton.append(markers);
 
-    const visibleLabels = [...schoolStarts, ...personalForDate].slice(0, 2);
+    const visibleLabels = [...schoolStarts, ...holidaysForDate, ...personalForDate].slice(0, 2);
     visibleLabels.forEach((event) => {
       const label = document.createElement('span');
-      label.className = `calendar-event-chip${event.date ? ' is-personal' : ''}`;
-      label.textContent = event.title;
+      label.className = `calendar-event-chip${event.date && !event.holiday ? ' is-personal' : ''}${event.holiday ? ' is-holiday' : ''}`;
+      label.textContent = `${event.title}${event.estimated ? ' (est.)' : ''}`;
       dayButton.append(label);
     });
-    if (schoolStarts.length + personalForDate.length > 2) {
+    const eventLabelCount = schoolStarts.length + holidaysForDate.length + personalForDate.length;
+    if (eventLabelCount > 2) {
       const more = document.createElement('span');
       more.className = 'calendar-more';
-      more.textContent = `+${schoolStarts.length + personalForDate.length - 2} more`;
+      more.textContent = `+${eventLabelCount - 2} more`;
       dayButton.append(more);
     }
 

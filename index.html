@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#f4f6ee">
   <title>Foma-doro! | Study planner</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="stylesheet" href="styles.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
   <script src="supabase-config.js" defer></script>
@@ -12,7 +13,7 @@
 </head>
 <body>
   <div class="app-shell">
-    <aside class="sidebar" aria-label="Main navigation">
+    <aside class="sidebar" id="sidebar" aria-label="Main navigation">
       <a class="brand" href="#home" data-page-link="home" aria-label="Foma-doro home">
         <span class="brand-mark" aria-hidden="true">F</span>
         <span>foma-doro<span class="brand-dot">!</span></span>
@@ -45,15 +46,15 @@
       </div>
 
       <div class="sidebar-note">
-        <span class="note-spark" aria-hidden="true">+</span>
-        <p>A little focus goes a long way.</p>
-        <span class="note-caption">ONE SESSION AT A TIME</span>
+        <p id="dailyQuote"></p>
       </div>
-      <p class="sidebar-footer">MADE FOR YOUR NEXT BIG THING</p>
     </aside>
 
     <main class="main-content">
       <header class="topbar">
+        <button class="sidebar-toggle" id="sidebarToggle" type="button" aria-label="Hide sidebar" title="Hide sidebar" aria-controls="sidebar" aria-expanded="true">
+          <span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span>
+        </button>
         <p class="today-label" id="todayLabel"></p>
         <div class="topbar-actions">
           <span class="account-status" id="accountStatus" role="status">Guest mode</span>
@@ -64,11 +65,9 @@
       <section class="page-view home-view is-visible" id="page-home" aria-labelledby="homeTitle">
         <div class="page-heading">
           <div>
-            <p class="eyebrow">ABOUT FOMA-DORO</p>
             <h1 id="homeTitle">Welcome to Foma-doro<span class="heading-period">!</span></h1>
             <p class="page-subtitle">A little space where students who have 'Fear Of Missing Activities' plan your school days, focus on what matters, and keep your goals in sight.</p>
           </div>
-          <div class="date-stamp" aria-hidden="true"><span>YOUR</span><strong>DAY</strong></div>
         </div>
 
         <a class="home-plan-button activity-tab activity-tab-focus" href="#daily-goal" data-page-link="daily-goal">
@@ -81,7 +80,6 @@
         <section class="activities-section" aria-labelledby="activitiesTitle">
           <div class="activities-heading">
             <div><p class="eyebrow">PICK YOUR NEXT STEP</p><h2 id="activitiesTitle">Explore activities</h2></div>
-            <span class="activities-caption">THREE WAYS TO GET GOING</span>
           </div>
           <div class="activity-tabs" role="group" aria-label="Foma-doro activities">
             <button class="activity-tab activity-tab-focus" type="button" data-page-link="study">
@@ -98,7 +96,6 @@
 
         <section class="about-us-section" aria-labelledby="aboutUsTitle">
           <div class="about-us-heading">
-            <p class="eyebrow">WHY FOMA-DORO</p>
             <h2 id="aboutUsTitle">About us<span class="heading-period">.</span></h2>
           </div>
           <div class="about-us-content">
@@ -272,7 +269,7 @@
               </div>
               <div class="calendar-days" id="calendarDays"></div>
             </div>
-            <div class="calendar-legend"><span><i class="legend-school"></i> School date</span><span><i class="legend-personal"></i> Your event</span></div>
+            <div class="calendar-legend"><span><i class="legend-school"></i> School date</span><span><i class="legend-holiday"></i> Public holiday</span><span><i class="legend-personal"></i> Your event</span></div>
           </section>
 
           <aside class="calendar-sidebar">
@@ -296,7 +293,7 @@
             </section>
           </aside>
         </div>
-        <p class="calendar-footnote">School-year dates shown as provided. Check with your school for local updates.</p>
+        <p class="calendar-footnote">School-year dates shown as provided. Check with your school for local updates. 2027 public holiday dates are estimates pending official proclamations.</p>
       </section>
 
       <section class="page-view tasks-view" id="page-goals" aria-labelledby="tasksTitle" hidden>
@@ -324,7 +321,6 @@
         </section>
       </section>
 
-      <footer class="main-footer"><span>FOMA-DORO! STUDY PLANNER</span><span>TAKE YOUR TIME. YOU'RE GETTING THERE.</span></footer>
     </main>
   </div>
 

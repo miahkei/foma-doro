@@ -1,0 +1,9 @@
+# Local editor files
+.vscode/
+.DS_Store
+
+# Logs
+*.log
+
+# Optional local build artifacts
+node_modules/

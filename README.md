@@ -23,7 +23,8 @@ The browser uses only the public anon/publishable key; never put a service-role 
 - Track completed sessions from the navigation bar; the Pomodoro timer stays locked until a daily goal is set.
 - Build a weekly study streak by completing at least one focus session each day.
 - Focus and break timer presets: 25/5 and 50/10, with pause, reset, and automatic break transitions.
-- School year 2026-2027 calendar.
+- School year 2026-2027 calendar with Philippine public holidays; 2027 dates are estimates pending official proclamations.
+- A motivational quote that changes daily, plus a collapsible sidebar.
 - In guest mode, calendar events, tasks, and study streaks stay in this browser.
 - When Supabase is configured and a user is signed in, personal calendar events and weekly study streaks sync across devices.
 - Add, complete, prioritize, and delete goals.
